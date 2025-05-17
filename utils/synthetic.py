@@ -1,7 +1,7 @@
 import numpy as np
 import scipy as sp
 from forward.laplace import ADEMF_1D
-def generate(seed,size,t_,memory_func,bound_cond,mean_log_params,cov_log_params,bounds):
+def generate(seed,size,t_,memory_func,bound_cond,mean_log_params,cov_log_params,bounds = None):
     """
     Generate a synthetic dataset of breakthrough curves (BTCs) using a memory function model,
     parameterized by log-normal random variables. Perform Karhunen–Loève (KL) decomposition 
@@ -25,6 +25,14 @@ def generate(seed,size,t_,memory_func,bound_cond,mean_log_params,cov_log_params,
     - params (array): Dimensionless parameters used to create the synthetic breakthrough curves.
     - btcs (2D array): Synthetic breakthrough curves
     """
+    cov_log_params_sqrt = sp.linalg.sqrtm(cov_log_params)
+    if bounds == None:
+        if memory_func == 'first order':
+            bounds = (np.maximum(np.array([20.0,0.0,0.0]),np.exp(np.diagonal(mean_log_params-cov_log_params_sqrt*4.0))),np.minimum(np.array([20000.0,np.inf,np.inf]),np.exp(np.diagonal(mean_log_params+cov_log_params_sqrt*4.0))))
+        if memory_func == 'power law':
+            bounds = (np.maximum(np.array([20.0,0.01,0.1]),np.exp(np.diagonal(mean_log_params-cov_log_params_sqrt*4.0))),np.minimum(np.array([20000.0,1.0,1.0]),np.exp(np.diagonal(mean_log_params+cov_log_params_sqrt*4.0))))
+    
+    
     np.random.seed(seed)
     
     # Preallocate arrays to store synthetic BTCs and their parameters
@@ -69,6 +77,6 @@ def generate_dist(params):
         mean_log_params = np.mean(np.log(params)[~is_outlier], axis=0)
         cov_log_params = np.cov(np.log(params)[~is_outlier], rowvar=0)
         cov_log_params_sqrt = sp.linalg.sqrtm(cov_log_params)
-        is_outlier = np.array([np.linalg.norm(np.abs(np.linalg.solve(cov_log_params_sqrt,(np.log(params[:,1:])-mean_log_params)[i_btc])))>4.0 for i_btc in indices_train]) # 4.0 corresponds to a 0.1% probability of being outside of the range
+        is_outlier = np.array([np.linalg.norm(np.abs(np.linalg.solve(cov_log_params_sqrt,(np.log(params)-mean_log_params)[i_btc])))>4.0 for i_btc in range(len(params))]) # 4.0 corresponds to a 0.1% probability of being outside of the range
     bounds = (np.exp(np.diagonal(mean_log_params-cov_log_params_sqrt*4.0)),np.exp(np.diagonal(mean_log_params+cov_log_params_sqrt*4.0)))
     return mean_log_params, cov_log_params, cov_log_params_sqrt   

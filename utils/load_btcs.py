@@ -1,7 +1,7 @@
 import csv
 import numpy as np
 
-def data(file_path, complete_zeros):
+def data(file_path, complete_zeros, min_dimless_res = None):
     """
     Parses and processes breakthrough curve (BTC) data from a CSV file.
     
@@ -26,8 +26,11 @@ def data(file_path, complete_zeros):
     
     with open(file_path, 'r') as file:
         data_reader = csv.reader(file)
-        data_mat = [[cell for cell in row] for row in data_reader]
-        breakthrough_curves_data = [[[data_mat[i][i_btc*5+j] for i in range(len(data_mat))] for j in range(4)] for i_btc in range(len(data_mat[0])//5)]
+        data_mat =  [[cell for cell in row] for row in data_reader]
+        max_len = max(len(row) for row in data_mat)
+        padded_data = [row + [''] * (max_len - len(row)) for row in data_mat]
+        breakthrough_curves_data = [[[padded_data[i][i_btc*5+j] for i in range(len(padded_data))] for j in range(4)] for i_btc in range(len(padded_data[0])//5)]
+
     
     ts_m = [np.array([float(c) for c in btc[0][33:] if c!='']) for btc in breakthrough_curves_data if len([float(c) for c in btc[3][33:] if c!=''])>0 and btc[2][18] not in ['','0'] and btc[2][26] in ['','0','0.0']]
     btcs_m = [np.array([float(c) for c in btc[3][33:] if c!='']) for btc in breakthrough_curves_data if len([float(c) for c in btc[3][33:] if c!=''])>0 and btc[2][18] not in ['','0'] and btc[2][26] in ['','0','0.0']]
@@ -38,10 +41,30 @@ def data(file_path, complete_zeros):
     names_list = [btc[0][31] for btc in breakthrough_curves_data if len([float(c) for c in btc[3][33:] if c!=''])>0 and btc[2][18] not in ['','0'] and btc[2][26] in ['','0','0.0']]
     n_btcs = len(ts_m)
     
+    
     for i_btc in range(n_btcs):
         if len(ts_m[i_btc])<len(btcs_m[i_btc]):
             btcs_m[i_btc] = btcs_m[i_btc][:len(ts_m[i_btc])]
+        if len(ts_m[i_btc])>len(btcs_m[i_btc]):
+            ts_m[i_btc] = ts_m[i_btc][:len(btcs_m[i_btc])]
     T_ = int(max([t[-1]/t[np.argmax(btc)] for t,btc in zip(ts_m,btcs_m)]))+1
+
+
+    def downsample_min_delta(t, Deltat_min, other):    
+        # Start with the first value
+        pos = [0]
+        last_val = t[0]
+        
+        for i in range(1,len(t)):
+            if t[i] - last_val >= Deltat_min:
+                pos.append(i)
+                last_val = t[i]
+        
+        return t[pos], other[pos]
+    
+    if min_dimless_res:
+        for i_btc in range(n_btcs):
+            ts_m[i_btc],btcs_m[i_btc] = downsample_min_delta(ts_m[i_btc],ts_m[i_btc][np.argmax(btcs_m[i_btc])]*min_dimless_res,btcs_m[i_btc])
     
     if complete_zeros:
         ts_m_0 = []
@@ -66,8 +89,8 @@ def data(file_path, complete_zeros):
             btc_ext = np.interp(t_ext,t,btc-background_cs_m[i_btc],left = 0.0,right = 0.0)
             btc_ext = btc_ext
             ts_m_0.append(t_ext)
-            btcs_m_0.append(btc_ext)
-        return n_btcs, ts_m_0, btcs_m_0, xs_m, names_list
-    
+            btcs_m_0.append(btc_ext)    
     else:
-        return n_btcs, ts_m, [btcs_m[i_btc]-background_cs_m[i_btc] for i_btc in range(n_btcs)], xs_m, names_list
+        n_btcs, ts_m_0, btcs_m_0, xs_m, names_list = n_btcs, ts_m, [btcs_m[i_btc]-background_cs_m[i_btc] for i_btc in range(n_btcs)], xs_m, names_list
+    
+    return n_btcs, ts_m_0, btcs_m_0, xs_m, names_list, T_
