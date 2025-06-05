@@ -24,7 +24,7 @@ These tools are designed for studying solute transport with mobile-immobile exch
 
 ---
 
-## ⚙️ Requirements
+## Requirements
 
 * Python 3.8+
 * NumPy
@@ -32,7 +32,7 @@ These tools are designed for studying solute transport with mobile-immobile exch
 
 ---
 
-## 🚀 Usage
+## Usage
 
 ### 1. Estimate Parameters
 
@@ -44,16 +44,16 @@ python main.py --mode estimate_parameters
 
 Other optional arguments are:
 
---btcs_csv_path, csv with the breakthrough curves to be estimated, default is 'data/antietam_creek_tracer_data.csv' which can be edited to use the same input format.
---data_dir, directory with the synthetic data .npy files, default is 'data'
---Nt, number of subdivisions in a unit of dimensionless time for forward solver, default and the one that is published is 150
---n_synth, size of the synthetic dataset, default and the one that is published is 10000
---seed, seed for synthetic dataset, default and the one that is published is 1
---memory_func, memory function describing the immobile exchange, 'first order' (default) or 'power law'
---bound_cond, boundary condition and definition of the domain, 'semi-infinite-conc', 'semi-infinite-mixed' or 'infinite' (default)
---v_range, range that defines the search space of the ratio between the advection velocity and the velocity of the measured peak, default is [0.9,1.5]
---n_vs, number of divisions in the velocity range, default is 121
---output_dir, directory of the output files, default is 'output'
+`--btcs_csv_path`, csv with the breakthrough curves to be estimated, default is 'data/antietam_creek_tracer_data.csv' which can be edited to use the same input format.  
+`--data_dir`, directory with the synthetic data .npy files, default is 'data'.  
+`--Nt`, number of subdivisions in a unit of dimensionless time for forward solver, default and the one that is published is 150.  
+`--n_synth`, size of the synthetic dataset, default and the one that is published is 10000.   
+`--seed`, seed for synthetic dataset, default and the one that is published is 1.  
+`--memory_func`, memory function describing the immobile exchange, 'first order' (default) or 'power law'. 
+`--bound_cond`, boundary condition and definition of the domain, 'semi-infinite-conc', 'semi-infinite-mixed' or 'infinite' (default).   
+`--v_range`, range that defines the search space of the ratio between the advection velocity and the velocity of the measured peak, default is [0.9,1.5].   
+`--n_vs`, number of divisions in the velocity range, default is 121.   
+`--output_dir`, directory of the output files, default is 'output'.
 
 
 This saves:
@@ -74,14 +74,14 @@ python main.py --mode generate_synthetic
 
 Other optional arguments are:
 
---btcs_csv_path, csv with the breakthrough curves to be estimated, default is 'data/antietam_creek_tracer_data.csv' which can be edited to use the same input format.
---data_dir, directory with the synthetic data .npy files, default is 'data'
---Nt, number of subdivisions in a unit of dimensionless time for forward solver, default and the one that is published is 150
---n_synth, size of the synthetic dataset, default and the one that is published is 10000
---seed, seed for synthetic dataset, default and the one that is published is 1
---memory_func, memory function describing the immobile exchange, 'first order' (default) or 'power law'
---bound_cond, boundary condition and definition of the domain, 'semi-infinite-conc', 'semi-infinite-mixed' or 'infinite' (default)
---n_lmbds, number of terms in the KL expansion, default is 35
+`--btcs_csv_path`, csv with the breakthrough curves to be estimated, default is 'data/antietam_creek_tracer_data.csv' which can be edited to use the same input format.  
+`--data_dir`, directory with the synthetic data .npy files, default is 'data'.  
+`--Nt`, number of subdivisions in a unit of dimensionless time for forward solver, default and the one that is published is 150.  
+`--n_synth`, size of the synthetic dataset, default and the one that is published is 10000.  
+`--seed`, seed for synthetic dataset, default and the one that is published is 1.  
+`--memory_func`, memory function describing the immobile exchange, 'first order' (default) or 'power law'.  
+`--bound_cond`, boundary condition and definition of the domain, 'semi-infinite-conc', 'semi-infinite-mixed' or 'infinite' (default).  
+`--n_lmbds`, number of terms in the KL expansion, default is 35.  
 
 This saves:
 
@@ -95,7 +95,7 @@ You can control the number of BTCs and seed via the script.
 
 ---
 
-## 📊 Output Files
+## Output Files
 
 Each `.csv` file has rows corresponding to BTCs and columns:
 
@@ -104,7 +104,7 @@ Each `.csv` file has rows corresponding to BTCs and columns:
 
 ---
 
-## 📚 References
+## References
 
 This work is based on:
 
@@ -116,12 +116,12 @@ If used for publication, please cite the corresponding papers (coming soon).
 
 ---
 
-## 🧑‍💻 Authors
+## Authors
 
 Developed by Manuel M. Reyna and Alexandre M. Tartakovsky, 2024–2025, as part of NSF-funded research, award number 2141503, “Collaborative Research: Informing River Corridor Transport Modeling by Harnessing Community Data and Physics-Aware Machine Learning”.
 
 ---
 
-## 📬 Contact
+## Contact
 
 For questions or collaborations, feel free to open an issue or contact via GitHub.
