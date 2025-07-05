@@ -156,6 +156,8 @@ def get_projected_points(projecting_points,projecting_basis,Z):
     """
     return projecting_points[0]+sum([proj(Z-projecting_points[0],e) for e in projecting_basis])
 
+
+
 def get_vertices_basis(projecting_points,projecting_basis):
     """
     Express the vertices of a simplex in the basis coordinates.
