@@ -18,8 +18,8 @@ This repository contains codes and data for parameter estimation of river transp
 ├── forward/                         # Forward models (Laplace-space solution)
 ├── utils/                           # Utilities: loading, errors, KL, synthetic generator
 ├── data/                            # See below in "Data"
-├── output/                          # Output of parameter estimation (CSV format)
-├── methods_comparison.ipynb         # Jupyter notebook used to obtain parameters and compare models in "Parameter estimation in river transport models with immobile phase exchange using dimensional analysis and reduced-order models"
+├── output/                          # Output folder for parameter estimation (CSV format) and `estimated_parameters_breakthrough_curves_with_hydraulic_data.csv` (estimated parameters using refined DSTE-KL-PBI for 295 breakthrough curves from the TIERRAS dataset, with matching labels and hydraulic paramters from the TIERRAS dataset)
+├── methods_comparison.ipynb         # Jupyter notebook used to obtain parameters and compare models in "Parameter estimation in river transport models with immobile phase exchange using dimensional analysis and reduced-order models" 
 ├── data_analysis.ipynb              # Jupyter notebook used to create plots for "Parameter estimation in river transport models with immobile phase exchange using dimensional analysis and reduced-order models"
 └── README.md                        # This file
 
@@ -42,8 +42,7 @@ Only for methods_comparison.ipynb:
 
 The folder `data/` includes:
 1.  `antietam_creek_tracer_data.csv`, an example of input breakthrough curve data for the model (Nordin and Sabol 1979). Breakthrough curve data can be input to the model as downloaded from the TIERRAS dataset (Rodríguez et al., 2025), the example is given in the case the format is modified.
-2. `.npy` files of synthetic datasets of 10000 breakthrough curves
-3. `estimated_parameters_breakthrough_curves.csv`, estimated parameters using refined DSTE-KL-PBI for 295 breakthrough curves from the TIERRAS dataset (with matching labels). 
+2. `.npy` files of synthetic datasets of 10000 breakthrough curves.
 
 ---
 
