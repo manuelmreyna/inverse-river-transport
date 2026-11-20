@@ -1,0 +1,7 @@
+For code only to estimate parameters using DSTE-KL-PBI
+numpy
+scipy
+Additionally, tu run the comparison of models:
+lipo
+torch
+scikit-learn

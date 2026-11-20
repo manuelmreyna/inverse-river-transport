@@ -3,9 +3,18 @@ import forward.laplace
     
 def RMSE_func(t,bt0,bt1):
     deltat = np.gradient(t)
-    P = bt0*deltat/np.sum(bt0*deltat)
-    Q = bt1*deltat/np.sum(bt1*deltat)
-    return np.sqrt(np.sum((P-Q)**2)/len(P))
+    P = bt0/np.sum(bt0*deltat)
+    Q = bt1/np.sum(bt1*deltat)
+    return np.sqrt(np.sum((P-Q)**2*deltat))
+
+def RMSD_func(t,bt0,bt1,return_a = False):
+    P = bt0
+    Q = bt1
+    a = np.trapezoid(P * Q,t) / np.trapezoid(Q**2,t)
+    if return_a:
+        return np.sqrt(np.trapezoid((P-a*Q)**2,t)/np.trapezoid(P**2,t)),a
+    else:
+        return np.sqrt(np.trapezoid((P-a*Q)**2,t)/np.trapezoid(P**2,t))
 
 def KL_div_func(t,bt0,bt1):
     epsilon = 10**-30

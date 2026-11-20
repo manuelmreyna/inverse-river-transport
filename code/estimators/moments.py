@@ -62,7 +62,7 @@ def TSM_moms_meas(t,btc):
     btc = Measured concentrations (same length as t)
     :returns: Array of first 4 measured kth central moments to the power 1/k, such that they all have the same dimension [T].
     """
-    mu_i = [np.trapz(btc*t**j,x=t)/np.trapz(btc,x=t) for j in range(5)]
+    mu_i = [np.trapezoid(btc*t**j,x=t)/np.trapezoid(btc,x=t) for j in range(5)]
     m_i = [mu_i[1],
            mu_i[2]-mu_i[1]**2,
            mu_i[3]-3*mu_i[1]*mu_i[2]+2*mu_i[1]**3,
@@ -70,7 +70,7 @@ def TSM_moms_meas(t,btc):
     m_i_t_dim = np.array([m_i[0],m_i[1]**(1/2),np.sign(m_i[2])*np.abs(m_i[2])**(1/3),m_i[3]**(1/4)])
     return m_i_t_dim
 
-def TSM(t,btc,x,bound_cond, params0 = None, bounds = None, v_ref = None):
+def ADEFO_1D(t,btc,x,bound_cond, params0):
     """
     Estimates parameters of the first order memory function problem (equivalent to transient storage model) by moment matching.
     t = Times of measurement of concentrations
@@ -84,14 +84,8 @@ def TSM(t,btc,x,bound_cond, params0 = None, bounds = None, v_ref = None):
     bounds = 2-tuple of arrays of length 4. Lower and upper bounds of parameters.
     :returns: Array of estimated independent parameters [v,Pe,beta*k_f/v*x,k_r/v*x] (all parameters but the velocity are dimensionless)
     """
-    if v_ref is None:
-        v_ref = x/t[np.argmax(btc)]
-    
-    if bounds is None:
-        bounds = (np.array([v_ref*0.9,20.0,0.0,0.0]),np.array([v_ref*1.5,20000.0,np.inf,np.inf]))
-    
-    if params0 is None:
-        params0 = np.concatenate(([v_ref],np.where((bounds[0][1:]>0.0) & (bounds[1][1:]<np.inf), np.sqrt(bounds[0][1:]*bounds[1][1:]), np.ones(3))))
+
+    bounds = (np.array([0.0,0.0,0.0,0.0]),np.array([np.inf,np.inf,np.inf,np.inf]))
 
     res = lambda params: TSM_moms_analyt(params,x,bound_cond)-TSM_moms_meas(t,btc)
     params_moments = scipy.optimize.least_squares(res,params0,bounds=bounds).x
